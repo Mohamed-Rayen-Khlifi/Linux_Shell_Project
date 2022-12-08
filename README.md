@@ -5,15 +5,16 @@ The only dependency is the [GNU readline library](https://cnswww.cns.cwru.edu/ph
 ```
 $ make
 ```
-
 ## Usage
 
 ```
 $ ./shell
 ```
 ## Deletion
-$ make clean
 
+```
+$ make clean
+```
 ## Features
 
 - Splits command based on whitespace
