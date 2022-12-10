@@ -11,10 +11,16 @@
 #include "headers/constants.h"
 #include "headers/break_string.h"
 #include "headers/split_line.h"
-#include "headers/builtins.h"
 
 char *history_path = NULL;
 
+/* list of builtins in the shell */
+char *builtins[] = {
+    "cd",
+    "help",
+    "history",
+    "exit"
+};
 
 /* Defining Shell builting utilities */
 int shell_cd(char **args);
@@ -57,13 +63,15 @@ int shell_cd(char **args)
 int shell_help(char **args)
 {
     int i;
-    printf(BOLD "\nshell: A minimalistic shell written in C."
+    printf( "##########################################################################################################################################\n"
+                GREEN"\t \t \t \t \t \t \t Help Menu"
                 "\n" RESET
-                "Builtin commands:\n"
-                "cd - Change dicrectory\n"
-                "history - Show history from ~/.shell_history\n"
-                "q- Exit this shell"
-                "help - Show this help\n\n");
+                "With this shell you are able to launch most of the commands in the $PATH environment variable, however it also supports 4 builtin commands:\n"
+                YELLOW"cd" WHITE"- Change dicrectory\n"
+                YELLOW"history" WHITE"- Show history from ~/.shell_history\n"
+                YELLOW"q" WHITE"- Exit this shell\n"
+                YELLOW"help" WHITE"- Show this help\n"
+                "##########################################################################################################################################\n");
 
     return 1;
 }
