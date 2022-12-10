@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "constants.h": "c"
-    }
+        "constants.h": "c",
+        "typeinfo": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
