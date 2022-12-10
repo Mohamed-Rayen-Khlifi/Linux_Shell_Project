@@ -30,14 +30,6 @@ int num_builtins()
     return sizeof(builtins) / sizeof(char *);
 }
 
-/*
- * Function that implements the shell builtin "cd", to change directories
- *
- * The command "cd" needs an argument to change the directory.
- *
- * If a argument is not provided, shell raises an warning.
- *
- */
 int shell_cd(char **args)
 {
     if (args[1] == NULL || strcmp(args[1],"~")==0)
@@ -468,6 +460,7 @@ void welcomeScreen()
     printf("\n\n");
 }
 
+
 int breakCommand(char *str)
 {
        char *tmp;
@@ -487,6 +480,26 @@ int breakCommand(char *str)
        } 
             
        int j, loc=0;
+
+       /*if(batchMode == 1)
+	 {
+	 for (j = 0; j < num_subcmds; j++) 
+	   {
+	     printf("Command %d: \"%s\"\n",j,subcmds[j]);
+	     //write(STDOUT_FILENO, subcmds[j], strlen(subcmds[j]));
+	     //if(j!=num_subcmds-1) write(STDOUT_FILENO, " ", strlen(" "));
+	   }
+
+	 //write(STDOUT_FILENO, "\n", strlen("\n"));
+
+	     }*/
+
+       /*if(strlen(buffer)>513) 
+	 {
+	   char error_message[30] = "An error has occurred\n";
+	   write(STDERR_FILENO, error_message, strlen(error_message));
+	   subcmds[0]=NULL;
+	   }*/
 
        for (j = 0; j < num_subcmds; j++) 
 	 {
@@ -664,21 +677,25 @@ int breakString(char *str)
        } 
 
 
+       /*   if(strcmp(subcmds[0], "exit") == 0)
 	 {
+	   //printf("exiting1...");
 	   return 101;
-	   }
+	   }*/
 
        int j, status;
            
        for (j = 0; j < num_subcmds; j++) 
        {
+	 //printf("SubWord %d: \"%s\"\n",j,subcmds[j]); 
 	 int ret;
-	   
-	     if(breakCommand(subcmds[j])==1){
+	 /*if(strcmp(str, subcmds[j]) == 0 && strcmp(subcmds[j], "ls") != 0 && strcmp(subcmds[j], "pwd") != 0)
+	   {
+	     if(breakCommand(subcmds[j])==1);
 	     	     return (101);
 		     }
 
-		else if((subcmds[j][0]=='c' && subcmds[j][1]=='d') == 1)
+		     else */if((subcmds[j][0]=='c' && subcmds[j][1]=='d') == 1)
 	   {
 	     breakCommand(subcmds[j]);
 	   }

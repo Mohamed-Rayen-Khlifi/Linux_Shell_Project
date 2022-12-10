@@ -3,7 +3,7 @@ LIBS=-lreadline
 
 all: shell 
 
-shell: shell.c
+shell: shell.c 
 	$(CC) $^ -o $@ $(LIBS)
 
 clean:
