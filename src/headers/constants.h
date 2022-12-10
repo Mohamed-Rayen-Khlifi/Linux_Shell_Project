@@ -5,13 +5,6 @@
 
 #define HISTFILE ".shell_history"
 
-/* list of builtins in the shell */
-char *builtins[] = {
-    "cd",
-    "help",
-    "history",
-    "exit"
-};
 
 /* terminal styles */
 #define RESET "\e[0m"

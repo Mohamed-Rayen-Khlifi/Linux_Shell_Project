@@ -3,10 +3,10 @@ LIBS=-lreadline
 
 all: shell 
 
-shell: shell.c 
-	$(CC) $^ -o $@ $(LIBS)
+shell: src/shell.c src/lib/break_command.c src/lib/break_string.c src/lib/split_line.c
+	$(CC) $^ -o bin/$@ $(LIBS)
 
 clean:
-	- rm shell 
+	- rm bin/shell 
 
 .PHONY: all test clean

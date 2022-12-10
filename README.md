@@ -5,10 +5,15 @@ The only dependency is the [GNU readline library](https://cnswww.cns.cwru.edu/ph
 ```
 $ make
 ```
-## Usage
+## Usage [Interactive mode]
 
 ```
-$ ./shell
+$ ./bin/shell
+```
+## Usage [Batch mode]
+
+```
+$ ./bin/shell Batch_File_Path
 ```
 ## Deletion
 
@@ -18,7 +23,6 @@ $ make clean
 ## Features
 
 - Splits command based on whitespace
-- Redirection
 - History
 - Recalling history through `!` & ~ `!-`
 - Piping (two processes only)
