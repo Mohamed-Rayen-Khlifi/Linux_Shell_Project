@@ -12,6 +12,16 @@
 
 char *history_path = NULL;
 
+
+/*
+##############################################################################################################
+
+                          S   H   E   L   L   #####    B   U   I   L   T   I   N   S
+
+##############################################################################################################
+
+
+*/
 /* Defining Shell builting utilities */
 int shell_cd(char **args);
 int shell_help(char **args);
@@ -463,14 +473,10 @@ void welcomeScreen()
 
 int breakCommand(char *str)
 {
-       char *tmp;
-       char *subcmds[1000];
-       char buffer[1000];
+       char *tmp, *subcmds[1000], buffer[1000], *subnew[1000];
        strcpy(buffer, str);
        tmp = strtok(buffer," \n\t");
-       int num_subcmds = 0;
-       int out, flag1=0;
-       char *subnew[1000];
+       int num_subcmds = 0, out, flag1=0;
         
        while (tmp) 
        {
@@ -481,30 +487,11 @@ int breakCommand(char *str)
             
        int j, loc=0;
 
-       /*if(batchMode == 1)
+     for (j = 0; j < num_subcmds; j++) 
 	 {
-	 for (j = 0; j < num_subcmds; j++) 
-	   {
-	     printf("Command %d: \"%s\"\n",j,subcmds[j]);
-	     //write(STDOUT_FILENO, subcmds[j], strlen(subcmds[j]));
-	     //if(j!=num_subcmds-1) write(STDOUT_FILENO, " ", strlen(" "));
-	   }
+    	     printf("Executing:\"%s\"\n",subcmds[j]);
 
-	 //write(STDOUT_FILENO, "\n", strlen("\n"));
-
-	     }*/
-
-       /*if(strlen(buffer)>513) 
-	 {
-	   char error_message[30] = "An error has occurred\n";
-	   write(STDERR_FILENO, error_message, strlen(error_message));
-	   subcmds[0]=NULL;
-	   }*/
-
-       for (j = 0; j < num_subcmds; j++) 
-	 {
 	 }
-
        subcmds[j] = NULL;
 
        if(num_subcmds > 1)
@@ -519,7 +506,6 @@ int breakCommand(char *str)
 		 }
 	     }
 
-	   //printf("%d", flag1);
 
 	   if(flag1==1)
 	     {
@@ -538,11 +524,8 @@ int breakCommand(char *str)
 	   for (j = 0; j < num_subcmds; j++) 
 	     {
 	       i = strlen(subcmds[j]) - 1;
-	       //write(STDOUT_FILENO, "Gotcha", strlen("Gotcha"));
-	       //printf("Val of i: %d", i);
 	       if(subcmds[j][i]=='>')
 		 {
-		   //write(STDOUT_FILENO, "Gotcha", strlen("Gotcha"));
 		   subcmds[j][i]='\0';
 		   flag2 = 1;
 		   savedJ=j;
@@ -558,19 +541,16 @@ int breakCommand(char *str)
 	   subnew[savedJ+1]=NULL;
 	 }
  
-       //if(batchMode==1) printf("%s\n", subcmds[0]);
        
        if(flag1==1)
 	 {
 	   close(STDOUT_FILENO);
 	   out = open(subcmds[loc+1], O_RDWR | O_CREAT , 0666 ); 
-	     //open(subcmds[loc+1], O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU);
 	   if(out < 0)
 	     {
 	       char error_message[30] = "An error has occurred\n";
 	       write(STDERR_FILENO, error_message, strlen(error_message));
 	       exit(0);
-	       //return 101;
 	     }
 	   dup2(out, STDOUT_FILENO);
 	   if(execvp(subnew[0], subnew) < 0)
@@ -586,13 +566,11 @@ int breakCommand(char *str)
 	 {
 	   close(STDOUT_FILENO);
 	   out = open(subcmds[savedJ+1], O_RDWR | O_CREAT , 0666 ); 
-	   //open(subcmds[loc+1], O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU);
 	   if(out < 0)
 	     {
 	       char error_message[30] = "An error has occurred\n";
 	       write(STDERR_FILENO, error_message, strlen(error_message));
 	       exit(0);
-	       //return 101;
 	     }
 	   dup2(out, STDOUT_FILENO);
 	   if(execvp(subnew[0], subnew) < 0)
@@ -606,7 +584,6 @@ int breakCommand(char *str)
 	 }
 	 else if(strcmp(subcmds[0], "cd") == 0)
 	 {
-	   //printf("PATH=%s\n", subcmds[1]);
 	   int res;
 	   if(subcmds[1]!=NULL)
 	     {
@@ -622,14 +599,11 @@ int breakCommand(char *str)
 	       char error_message[30] = "An error has occurred\n";
 	       write(STDERR_FILENO, error_message, strlen(error_message));
 	       exit(101);
-	       //return 101;
 	     }
 	 }
        else if(strcmp(subcmds[0], "exit") == 0)
 	 {
-	   //printf("\n");
 	   exit(0);
-	   //return 10;
 	 }
        else if(strcmp(subcmds[0], "pwd") == 0)
 	 {
@@ -638,11 +612,9 @@ int breakCommand(char *str)
 	       char error_message[30] = "An error has occurred\n";
 	       write(STDERR_FILENO, error_message, strlen(error_message));
 	       exit(0);
-	       //return 101;
 	     }
 	   else if (execvp(subcmds[0], subcmds) < 0)
 	     {
-	       //	   printf("\n%s - Failed", subcmds[0]);
 	       char error_message[30] = "An error has occurred\n";
 	       write(STDERR_FILENO, error_message, strlen(error_message));
 	       exit(101); 
@@ -650,13 +622,10 @@ int breakCommand(char *str)
 	 }
        else if (execvp(subcmds[0], subcmds) < 0)
 	 {
-	   //	   printf("\n%s - Failed", subcmds[0]);
 	   char error_message[30] = "An error has occurred\n";
 	   write(STDERR_FILENO, error_message, strlen(error_message));
-	   //exit(101); 
 	   return 1;
 	 }
-       //exit(101);
        return 1;
 }
 
@@ -677,25 +646,12 @@ int breakString(char *str)
        } 
 
 
-       /*   if(strcmp(subcmds[0], "exit") == 0)
-	 {
-	   //printf("exiting1...");
-	   return 101;
-	   }*/
-
        int j, status;
            
        for (j = 0; j < num_subcmds; j++) 
        {
-	 //printf("SubWord %d: \"%s\"\n",j,subcmds[j]); 
 	 int ret;
-	 /*if(strcmp(str, subcmds[j]) == 0 && strcmp(subcmds[j], "ls") != 0 && strcmp(subcmds[j], "pwd") != 0)
-	   {
-	     if(breakCommand(subcmds[j])==1);
-	     	     return (101);
-		     }
-
-		     else */if((subcmds[j][0]=='c' && subcmds[j][1]=='d') == 1)
+		    if((subcmds[j][0]=='c' && subcmds[j][1]=='d') == 1)
 	   {
 	     breakCommand(subcmds[j]);
 	   }
@@ -707,22 +663,16 @@ int breakString(char *str)
 	   {
 	     if( (ret=fork()) > 0 )
 	       {
-                 //   parent(ret);
-                 //wait(&status);
+                 
 		 waitpid(ret,&status,WUNTRACED);
 		 int x = WEXITSTATUS(status);
-		 //printf("parent - Status: %d\n", status);
 		 if(x==101)
 		   return 101;
-		   //exit(101);
 	       }
 	     else if ( ret == 0 )
 	       {
-		 //    child();
-		 //printf("child\n");
 		 if(breakCommand(subcmds[j])==1)  
 		   { 
-		     //printf("exiting2..."); 
 		     exit(1);
 		     return 101; 
 		   }
@@ -881,10 +831,6 @@ int main(int argc, char *argv[])
 		  int ret;
 		  if( (ret=fork()) > 0 )
 		    {
-		      //   parent();
-		      //printf("Hello");
-		      //showPrompt();
-		      //wait(&status);
 		      while (1) {
 			int status;
 			pid_t done = waitpid(ret,&status,WUNTRACED);
@@ -903,15 +849,10 @@ int main(int argc, char *argv[])
 		    }
 		  else if ( ret == 0 )
 		    {
-		      //    child();
-		      //close(STDOUT_FILENO);
-		      //printf("Running %s in background.\n------------------------------\n", cmds[i] );
 		      if(breakString(cmds[i])==101) 
 			{ 
-			  //printf("exiting4..."); 
 			  exit(0); 
 			}
-		      //break;
 		    }
 		  else 
 		    {
