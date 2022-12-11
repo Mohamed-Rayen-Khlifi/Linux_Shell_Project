@@ -435,15 +435,13 @@ void welcomeScreen()
 
 
 
-
-
 int main(int argc, char *argv[])
 {
 //Here
     int batchMode=0;
     char *fileToRead = "/no/such/file";
     char *cmds[1000];
-    char buffer[1000]="test";
+    char buffer[1000]="";
     char * tmp;
     int num_cmds, i, flag, rc=0;
 
@@ -483,7 +481,9 @@ int main(int argc, char *argv[])
       while (!feof(new)) 
       {
           num_cmds = 0;
-          if(batchMode==0) write(STDOUT_FILENO, "537sh% ", strlen("537sh% ")); 
+          if(batchMode==0)  printf("Batch mode is 0");
+          //write(STDOUT_FILENO, "Quit? ", strlen("Quit?")); 
+          
 	    //printf("%s%% ",argv[0]); 
 	  if(batchMode==1)
 	      fgets(buffer, 1000, fp);

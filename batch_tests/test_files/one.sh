@@ -1,1 +1,1 @@
-umask
+getent passwd rkhlifi

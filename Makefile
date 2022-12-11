@@ -10,4 +10,4 @@ shell: src/shell.c src/lib/break_command.c src/lib/break_string.c src/lib/split_
 clean:
 	- rm bin/shell 
 
-.PHONY: all test clean
+.PHONY: all  clean

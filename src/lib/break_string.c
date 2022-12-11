@@ -24,7 +24,6 @@ int breakString(char *str)
           tmp = strtok(NULL,";");
        } 
 
-
        int j, status;
            
        for (j = 0; j < num_subcmds; j++) 
