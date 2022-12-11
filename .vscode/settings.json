@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "constants.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "unistd.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

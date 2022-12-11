@@ -4,7 +4,7 @@
 #define TOKEN_DELIMS " \t\r\n\a" /* token delimeters */
 
 #define HISTFILE ".shell_history"
-
+extern char *history_path; /* Defining the shared pointer variable history_path*/
 
 /* terminal styles */
 #define RESET "\e[0m"
