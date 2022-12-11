@@ -1,5 +1,4 @@
 Refactoring:
-         the prompt 
          the builtins
          the launch
          execute functions

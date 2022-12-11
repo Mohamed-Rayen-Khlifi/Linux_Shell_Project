@@ -11,6 +11,9 @@
 #include "headers/constants.h"
 #include "headers/break_string.h"
 #include "headers/split_line.h"
+#include "headers/get_prompt.h"
+#include "headers/welcome_screen.h"
+#include "headers/launch.h"
 
 char *history_path = NULL;
 
@@ -19,8 +22,7 @@ char *builtins[] = {
     "cd",
     "help",
     "history",
-    "exit"
-};
+    "exit"};
 
 /* Defining Shell builting utilities */
 int shell_cd(char **args);
@@ -42,7 +44,7 @@ int num_builtins()
 
 int shell_cd(char **args)
 {
-    if (args[1] == NULL || strcmp(args[1],"~")==0)
+    if (args[1] == NULL || strcmp(args[1], "~") == 0)
     {
         // If we write no path (only 'cd'), then go to the home directory
         chdir(getenv("HOME"));
@@ -63,15 +65,10 @@ int shell_cd(char **args)
 int shell_help(char **args)
 {
     int i;
-    printf( "##########################################################################################################################################\n"
-                GREEN"\t \t \t \t \t \t \t Help Menu"
-                "\n" RESET
-                "With this shell you are able to launch most of the commands in the $PATH environment variable, however it also supports 4 builtin commands:\n"
-                YELLOW"cd" WHITE"- Change dicrectory\n"
-                YELLOW"history" WHITE"- Show history from ~/.shell_history\n"
-                YELLOW"q" WHITE"- Exit this shell\n"
-                YELLOW"help" WHITE"- Show this help\n"
-                "##########################################################################################################################################\n");
+    printf("##########################################################################################################################################\n" GREEN "\t \t \t \t \t \t \t Help Menu"
+           "\n" RESET
+           "With this shell you are able to launch most of the commands in the $PATH environment variable, however it also supports 4 builtin commands:\n" YELLOW "cd" WHITE "- Change dicrectory\n" YELLOW "history" WHITE "- Show history from ~/.shell_history\n" YELLOW "q" WHITE "- Exit this shell\n" YELLOW "help" WHITE "- Show this help\n"
+           "##########################################################################################################################################\n");
 
     return 1;
 }
@@ -79,86 +76,6 @@ int shell_help(char **args)
 void shell_exit_on_SIGINT(int signal)
 {
     exit(0);
-}
-
-/*
- * Function that is responsible for launching and handling processes.
- *
- * @args:    The argument list provided to the shell. This argument list will
- *           be used to launch and execute the child process.
- * @fd:      The file descriptor to be passed, in case of a redirection operator
- *           being passed to the shell.
- * @options: A list of options being implemented to handle background processing
- *           and redirection. The options are defined in constants.h
- */
-int launch(char **args, int fd, int options)
-{
-
-    int shell_bg = (options & shell_BG) ? 1 : 0;
-    int shell_stdout = (options & shell_STDOUT) ? 1 : 0;
-    int shell_stderr = (options & shell_STDERR) ? 1 : 0;
-    int shell_stdin = (options & shell_STDIN) ? 1 : 0;
-
-    pid_t pid, wpid;
-
-    int status;
-
-    if ((pid = fork()) == 0)
-    {
-        // child process
-
-        if (fd > 2)
-        {
-
-            if (shell_stdout && dup2(fd, STDOUT_FILENO) == -1)
-            {
-                fprintf(stderr, RED "shell: Error duplicating stream: %s\n" RESET, strerror(errno));
-                return 1;
-            }
-
-            if (shell_stderr && dup2(fd, STDERR_FILENO) == -1)
-            {
-                fprintf(stderr, RED "shell: Error duplicating stream: %s\n" RESET, strerror(errno));
-                return 1;
-            }
-
-            if (shell_stdin && dup2(fd, STDIN_FILENO) == -1)
-            {
-                fprintf(stderr, RED "shell: Error duplicating stream: %s\n" RESET, strerror(errno));
-                return 1;
-            }
-
-            close(fd);
-        }
-
-        if (execvp(args[0], args) == -1)
-        {
-            fprintf(stderr, RED "shell: %s\n" RESET, strerror(errno));
-        }
-        exit(EXIT_FAILURE);
-    }
-    else if (pid < 0)
-    {
-        fprintf(stderr, RED "shell: %s\n" RESET, strerror(errno));
-    }
-    else
-    {
-        // ignore SIGINT in parent process when child process is launched
-        signal(SIGINT, SIG_IGN);
-        do
-        {
-            if (!shell_bg)
-            {
-                wpid = waitpid(pid, &status, WUNTRACED);
-            }
-            else
-            {
-                printf(YELLOW "[bg][%d] - %s\n" RESET, pid, args[0]);
-            }
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-    }
-
-    return 1;
 }
 
 /* Function that shows the shell history file along with line numbers
@@ -220,7 +137,7 @@ int execute(char **args)
         args[i] = NULL;
         return launch(args, STDOUT_FILENO, shell_BG);
     }
-    
+
     for (i = 0; i < num_builtins(); i++)
     {
         // strcmp("a","a") == 0
@@ -283,40 +200,6 @@ int execute(char **args)
     }
 
     return launch(args, STDOUT_FILENO, shell_FG);
-}
-
-
-/* Function that returns the prompt */
-char *get_prompt(void)
-{
-    char *prompt, tempbuf[PATH_MAX];
-
-    char *user = getenv("USERNAME");
-    char *host = getenv("DESKTOP_SESSION");
-    
-    size_t prompt_len = strlen(user) + strlen(host) + strlen(tempbuf)+ 1500; 
-
-    prompt = malloc(prompt_len);
-
-    if( getcwd( tempbuf, sizeof(tempbuf) ) != NULL ) {
-
-        snprintf(prompt, prompt_len, "%s %% ", tempbuf);
-        strcpy(prompt, BLUE"");
-        strcat(prompt, user);
-        strcat(prompt, WHITE"@");
-        strcat(prompt, BLUE"");
-        strcat(prompt, host);
-        strcat(prompt, YELLOW" ");
-        strcat(prompt, tempbuf);
-        strcat(prompt, WHITE"");
-        strcat(prompt, " %");
-        strcat(prompt, " ");
-        return prompt;
-    }
-    else {
-        free(prompt);
-        return NULL;
-    }
 }
 
 /* The main loop of the shell */
@@ -422,41 +305,31 @@ void main_loop(void)
     free(history_path);
 }
 
-
-
-void welcomeScreen()
-{
-    printf("\n\t============================================================\n");
-    printf(RED"\t       Advanced Operating Systems Project: Basic Shell \n");
-    printf(YELLOW"\t             Made by Malak, Maram and Rayen\n");
-    printf(WHITE"\t============================================================\n");
-    printf("\n\n");
-}
-
-
-
 int main(int argc, char *argv[])
 {
-//Here
-    int batchMode=0;
+    // Here
+    int batchMode = 0;
     char *fileToRead = "/no/such/file";
     char *cmds[1000];
-    char buffer[1000]="";
-    char * tmp;
-    int num_cmds, i, flag, rc=0;
+    char buffer[1000] = "";
+    char *tmp;
+    int num_cmds, i, flag, rc = 0;
 
-    if (argc > 2 ) {
+    if (argc > 2)
+    {
 
-        char error_message[150] = RED "Please specify one file. \n" ;
+        char error_message[150] = RED "Please specify one file. \n";
 
-	    write(STDERR_FILENO, error_message, strlen(error_message));
-	    exit(1);
+        write(STDERR_FILENO, error_message, strlen(error_message));
+        exit(1);
     }
-    else if (argc == 2) {
-        batchMode = 1;	        
-	    fileToRead = argv[1];
+    else if (argc == 2)
+    {
+        batchMode = 1;
+        fileToRead = argv[1];
     }
-    else {
+    else
+    {
         welcomeScreen();
         main_loop();
     }
@@ -464,154 +337,166 @@ int main(int argc, char *argv[])
     FILE *new;
     FILE *fp;
 
-    if (batchMode == 1){
-        fp = fopen(fileToRead,"r");
-	    if (fp==NULL) 
-	    {
-	        char error_message[100] = RED"File does not exist.\n";
-	        write(STDERR_FILENO, error_message, strlen(error_message));
-	        exit(1);
-	    }
-	    new=fp;
+    if (batchMode == 1)
+    {
+        fp = fopen(fileToRead, "r");
+        if (fp == NULL)
+        {
+            char error_message[100] = RED "File does not exist.\n";
+            write(STDERR_FILENO, error_message, strlen(error_message));
+            exit(1);
+        }
+        new = fp;
     }
 
     else
-	new=stdin;
-	
-      while (!feof(new)) 
-      {
-          num_cmds = 0;
-          if(batchMode==0)  printf("Batch mode is 0");
-          //write(STDOUT_FILENO, "Quit? ", strlen("Quit?")); 
-          
-	    //printf("%s%% ",argv[0]); 
-	  if(batchMode==1)
-	      fgets(buffer, 1000, fp);
-	  else
-	      fgets(buffer, 1000, stdin);
+        new = stdin;
 
-	  int j;
+    while (!feof(new))
+    {
+        num_cmds = 0;
+        if (batchMode == 0)
+            printf("Batch mode is 0");
+        // write(STDOUT_FILENO, "Quit? ", strlen("Quit?"));
 
-	  strtok(buffer, "\n\r");
+        // printf("%s%% ",argv[0]);
+        if (batchMode == 1)
+            fgets(buffer, 1000, fp);
+        else
+            fgets(buffer, 1000, stdin);
 
-	  if(batchMode == 1 && strcmp(buffer,"xyz")!=0)
-	    {
-		  //printf("Command %d: \"%s\"\n",j,subcmds[j]);
-		  write(STDOUT_FILENO, buffer, strlen(buffer));
-		  write(STDOUT_FILENO, "\n", strlen("\n"));
-		  //if(j!=num_subcmds-1) write(STDOUT_FILENO, " ", strlen(" "));
-		  if(strcmp(buffer,"+")==0)
-		    {
-		      //printf("%s",buffer);
-		      exit(0);
-		    }
-	    }
+        int j;
 
-	  if(strcmp(buffer,"xyz")==0) exit(0);
-	  
-	  //printf("Buffer is: %s\n", buffer);
+        strtok(buffer, "\n\r");
 
-	  for(i=0; buffer[i]!='\0'; i++) {
-	    if(buffer[i]=='+')
-	      flag++;
-	  }
-	  
-	  if(strlen(buffer)==0)
-	    {
-	      char error_message[30] = "An error has occurred\n";
-	      write(STDERR_FILENO, error_message, strlen(error_message));
-	    }
+        if (batchMode == 1 && strcmp(buffer, "xyz") != 0)
+        {
+            // printf("Command %d: \"%s\"\n",j,subcmds[j]);
+            write(STDOUT_FILENO, buffer, strlen(buffer));
+            write(STDOUT_FILENO, "\n", strlen("\n"));
+            // if(j!=num_subcmds-1) write(STDOUT_FILENO, " ", strlen(" "));
+            if (strcmp(buffer, "+") == 0)
+            {
+                // printf("%s",buffer);
+                exit(0);
+            }
+        }
 
-	  j = i-2;
-	  int endingWithPlus = 0;
-	  for(; j >= 0; j--)
-	  {
-	    if(buffer[j] == ' ')
-	      continue;
-	    else if(buffer[j] == '+')
-	      {
-		endingWithPlus = 1;
-		break;
-	      }
-	    else
-	      break;
-	  }
+        if (strcmp(buffer, "xyz") == 0)
+            exit(0);
 
-	  //printf("%d\n", flag);
-          tmp = strtok(buffer,"+");
-           
-          while (tmp) 
-          {
-              cmds[num_cmds] = tmp;
-              num_cmds++;
-              tmp = strtok(NULL,"+");
-          } 
+        // printf("Buffer is: %s\n", buffer);
 
-	  int numCmndsToFork = num_cmds;
-	  
-	  if(flag==0)
-	  {
-	    if((rc=breakString(buffer))==101) {
-	      //printf("exiting3..."); 
-	      break; exit(0);
-	    }
-	  }
-	  else
-	    {
-	      
-	      if(endingWithPlus == 0)
-	      {
-		  numCmndsToFork = num_cmds - 1;
-		   if((rc=breakString(cmds[num_cmds-1]))==101)
-		   {
-		     //printf("exiting3..."); 
-		     break; 
-		     exit(0);
-		   }
-	      }
+        for (i = 0; buffer[i] != '\0'; i++)
+        {
+            if (buffer[i] == '+')
+                flag++;
+        }
 
-	      int i, status;
-	      for (i = numCmndsToFork-1; i >= 0; i--) 
-		{
-		  //          printf("Word %d: \"%s\"\n",i,cmds[i]);
-            
-		  int ret;
-		  if( (ret=fork()) > 0 )
-		    {
-		      while (1) {
-			int status;
-			pid_t done = waitpid(ret,&status,WUNTRACED);
-			if (done == -1) {
-			  if (errno == ECHILD) break; // no more child processes
-			} else {
-			  int x = WEXITSTATUS(status);
-			  //printf("parent - main - Status: %d\n", x);
+        if (strlen(buffer) == 0)
+        {
+            char error_message[30] = "An error has occurred\n";
+            write(STDERR_FILENO, error_message, strlen(error_message));
+        }
 
-			  if (!WIFEXITED(x) || WEXITSTATUS(x) != 101) {
-			    //cerr << "pid " << done << " failed" << endl;
-			    exit(0);
-			  }
-			}
-		      }
-		    }
-		  else if ( ret == 0 )
-		    {
-		      if(breakString(cmds[i])==101) 
-			{ 
-			  exit(0); 
-			}
-		    }
-		  else 
-		    {
-		      char error_message[30] = "An error has occurred\n";
-		      write(STDERR_FILENO, error_message, strlen(error_message));
-		      exit(0);
-		    }
-		}
-	    }
-	  strcpy(buffer,"xyz");
-      }
-      return 0;
+        j = i - 2;
+        int endingWithPlus = 0;
+        for (; j >= 0; j--)
+        {
+            if (buffer[j] == ' ')
+                continue;
+            else if (buffer[j] == '+')
+            {
+                endingWithPlus = 1;
+                break;
+            }
+            else
+                break;
+        }
+
+        // printf("%d\n", flag);
+        tmp = strtok(buffer, "+");
+
+        while (tmp)
+        {
+            cmds[num_cmds] = tmp;
+            num_cmds++;
+            tmp = strtok(NULL, "+");
+        }
+
+        int numCmndsToFork = num_cmds;
+
+        if (flag == 0)
+        {
+            if ((rc = breakString(buffer)) == 101)
+            {
+                // printf("exiting3...");
+                break;
+                exit(0);
+            }
+        }
+        else
+        {
+
+            if (endingWithPlus == 0)
+            {
+                numCmndsToFork = num_cmds - 1;
+                if ((rc = breakString(cmds[num_cmds - 1])) == 101)
+                {
+                    // printf("exiting3...");
+                    break;
+                    exit(0);
+                }
+            }
+
+            int i, status;
+            for (i = numCmndsToFork - 1; i >= 0; i--)
+            {
+                //          printf("Word %d: \"%s\"\n",i,cmds[i]);
+
+                int ret;
+                if ((ret = fork()) > 0)
+                {
+                    while (1)
+                    {
+                        int status;
+                        pid_t done = waitpid(ret, &status, WUNTRACED);
+                        if (done == -1)
+                        {
+                            if (errno == ECHILD)
+                                break; // no more child processes
+                        }
+                        else
+                        {
+                            int x = WEXITSTATUS(status);
+                            // printf("parent - main - Status: %d\n", x);
+
+                            if (!WIFEXITED(x) || WEXITSTATUS(x) != 101)
+                            {
+                                // cerr << "pid " << done << " failed" << endl;
+                                exit(0);
+                            }
+                        }
+                    }
+                }
+                else if (ret == 0)
+                {
+                    if (breakString(cmds[i]) == 101)
+                    {
+                        exit(0);
+                    }
+                }
+                else
+                {
+                    char error_message[30] = "An error has occurred\n";
+                    write(STDERR_FILENO, error_message, strlen(error_message));
+                    exit(0);
+                }
+            }
+        }
+        strcpy(buffer, "xyz");
+    }
+    return 0;
 
     return EXIT_SUCCESS;
 }
