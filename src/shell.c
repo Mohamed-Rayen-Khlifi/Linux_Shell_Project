@@ -15,6 +15,7 @@
 #include "headers/welcome_screen.h"
 #include "headers/launch.h"
 
+// BUiltins
 char *history_path = NULL;
 
 /* list of builtins in the shell */

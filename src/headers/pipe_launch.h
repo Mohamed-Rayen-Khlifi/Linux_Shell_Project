@@ -1,0 +1,1 @@
+int pipe_launch(char **arg1, char **arg2);
