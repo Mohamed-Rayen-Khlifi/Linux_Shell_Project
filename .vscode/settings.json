@@ -2,7 +2,8 @@
     "files.associations": {
         "constants.h": "c",
         "typeinfo": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "limits": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

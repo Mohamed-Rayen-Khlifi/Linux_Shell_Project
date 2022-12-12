@@ -6,6 +6,8 @@
 #include "../headers/launch.h"
 #include "../headers/builtins.h"
 
+// Component responsible for treating special cases and launching processes using the launch component
+
 
 /* Function pointers that correspond to the buitins */
 int (*builtin_func[])(char **) = {
@@ -51,6 +53,8 @@ int execute(char **args)
         return launch(args, STDOUT_FILENO, shell_BG);
     }
 
+    // Checking builtin commands
+
     for (i = 0; i < num_builtins(); i++)
     {
         // strcmp("a","a") == 0
@@ -62,11 +66,13 @@ int execute(char **args)
 
     int j = 0;
 
+    // Redirection
     while (args[j] != NULL)
     {
         // for `>` operator for redirection (stdout)
         if (!strcmp(">", args[j]))
         {
+            // File descriptor used for redirection
             int fd = fileno(fopen(args[j + 1], "w+"));
             args[j] = NULL;
             return launch(args, fd, shell_FG);

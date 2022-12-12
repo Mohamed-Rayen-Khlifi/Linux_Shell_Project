@@ -16,115 +16,13 @@
 #include "headers/launch.h"
 #include "headers/execute.h"
 #include "headers/builtins.h"
+#include "headers/main_loop.h"
 
 char *history_path = NULL;
 
-/* The main loop of the shell */
-void main_loop(void)
-{
-
-    signal(SIGINT, shell_exit_on_SIGINT);
-    char *line;
-    char **args;
-
-    int status, index;
-
-    // get prompt
-    char *prompt;
-
-    char *homedir = getenv("HOME");
-
-    size_t history_path_len = sizeof(char) * PATH_MAX;
-    history_path = malloc(history_path_len);
-    snprintf(history_path, history_path_len, "%s/%s", homedir, HISTFILE);
-
-    // read from history file
-    read_history(history_path);
-
-    do
-    {
-        // use GNU's readline() function
-        if ((prompt = get_prompt()) == NULL)
-        {
-            status = 0;
-            fprintf(stderr, RED "shell: Failed to get prompt.\n" RESET);
-        }
-        line = readline(prompt);
-
-        // add to history for future use
-        add_history(line);
-
-        // EOF
-        if (!line)
-        {
-            status = 0;
-        }
-        else
-        {
-            // write to history file
-            write_history(history_path);
-
-            char *history_copy;
-
-            if (line[0] == '!' && line[1] == '-')
-            {
-                if (sscanf(line, "!-%d", &index) != EOF)
-                {
-                    HIST_ENTRY *hist_entry = history_get(history_length - index);
-                    history_copy = malloc(strlen(hist_entry->line) + 1);
-                    strcpy(history_copy, hist_entry->line);
-                    args = split_line(history_copy);
-                }
-                else
-                    fprintf(stderr, RED "shell: Expected digit after '!-' for history recollection.\n." RESET);
-            }
-
-            else if (line[0] == 'q')
-            {
-                exit(0);
-                free(prompt);
-            }
-
-            else if (line[0] == '!')
-            {
-                if (sscanf(line, "!-%d", &index) != EOF)
-                {
-                    HIST_ENTRY *hist_entry = history_get(index);
-                    history_copy = malloc(strlen(hist_entry->line) + 1);
-                    strcpy(history_copy, hist_entry->line);
-                    args = split_line(history_copy);
-                    free(history_copy);
-                }
-                else
-                    fprintf(stderr, RED "shell: Expected digit after '!' for history recollection.\n" RESET);
-            }
-            else
-            {
-                args = split_line(line);
-            }
-
-            if (args)
-            {
-                status = execute(args);
-                free(args);
-            }
-            else
-            {
-                status = 1;
-            }
-        }
-
-        free(prompt);
-        free(line);
-
-    } while (status);
-
-    free(history_path);
-}
 
 int main(int argc, char *argv[])
 {
-    // Here
     int batchMode = 0;
     char *fileToRead = "/no/such/file";
     char *cmds[1000];
@@ -132,19 +30,21 @@ int main(int argc, char *argv[])
     char *tmp;
     int num_cmds, i, flag, rc = 0;
 
+    // Passing two files to the batch mode
     if (argc > 2)
     {
-
         char error_message[150] = RED "Please specify one file. \n";
-
         write(STDERR_FILENO, error_message, strlen(error_message));
         exit(1);
     }
+    
+    // Passed a file path to the shell binary
     else if (argc == 2)
     {
         batchMode = 1;
         fileToRead = argv[1];
     }
+
     else
     {
         welcomeScreen();

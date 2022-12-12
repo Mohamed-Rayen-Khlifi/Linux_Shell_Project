@@ -1,14 +1,9 @@
-
-
 #include<wait.h>
-//#include<signum-generic.h>
 #include<signal.h>
 #include<stdlib.h>
 #include<unistd.h>
 #include<string.h>
 #include<stdio.h>
-//#include<stdio2.h>
-//#include<waitflags.h>
 #include<errno.h>
 #include "../headers/constants.h"
 /*
@@ -36,7 +31,7 @@ int launch(char **args, int fd, int options)
     if ((pid = fork()) == 0)
     {
         // child process
-
+/*
         if (fd > 2)
         {
 
@@ -60,17 +55,18 @@ int launch(char **args, int fd, int options)
 
             close(fd);
         }
-
+*/
         if (execvp(args[0], args) == -1)
         {
-            fprintf(stderr, RED "shell: %s\n" RESET, strerror(errno));
-        }
-        exit(EXIT_FAILURE);
+            fprintf(stderr, RED "Unable to execute command '%s': %s\n" RESET, args[0],strerror(errno));
+        }        exit(EXIT_FAILURE);
     }
+
     else if (pid < 0)
     {
-        fprintf(stderr, RED "shell: %s\n" RESET, strerror(errno));
+        fprintf(stderr, RED "Error: Child processes' forking has failed  %s\n" RESET, strerror(errno));
     }
+
     else
     {
         // ignore SIGINT in parent process when child process is launched
@@ -79,14 +75,17 @@ int launch(char **args, int fd, int options)
         {
             if (!shell_bg)
             {
+                // Wait for child pid to die
                 wpid = waitpid(pid, &status, WUNTRACED);
             }
             else
             {
-                printf(YELLOW "[bg][%d] - %s\n" RESET, pid, args[0]);
+                printf(YELLOW "This process is now launched in the background [%d] - %s\n" RESET, pid, args[0]);
             }
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+        // Didnt receive an exist or a signal
     }
+
 
     return 1;
 }

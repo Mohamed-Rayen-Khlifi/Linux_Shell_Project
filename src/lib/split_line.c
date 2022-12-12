@@ -8,6 +8,7 @@
 #include <errno.h>
 #include "../headers/constants.h"
 /* Function that splits the line based on delimeters defined in constants.h */
+// Splits commands into tokens and groups these tokens in a token table then returns it
 char **split_line(char *line)
 {
     char **tokens = malloc(sizeof(char *) * TOKEN_BUFSIZE);
@@ -18,16 +19,18 @@ char **split_line(char *line)
 
     if (!tokens)
     {
-        fprintf(stderr, RED "shell: Memory allocation failed." RESET);
+        fprintf(stderr, RED "Memory allocation failed." RESET);
         exit(EXIT_FAILURE);
     }
-
+    
+    // Split inpute line in tokens depending on delimiters
     token = strtok(line, TOKEN_DELIMS);
     while (token != NULL)
     {
         tokens[pos] = token;
         pos++;
 
+        // Reallocing memory space for the tokens table
         if (pos >= bufsize_copy)
         {
             bufsize_copy = bufsize_copy * 2;
@@ -35,11 +38,12 @@ char **split_line(char *line)
 
             if (!tokens)
             {
-                fprintf(stderr, RED "shell: Memory allocation failed." RESET);
+                fprintf(stderr, RED "Memory allocation failed." RESET);
                 exit(EXIT_FAILURE);
             }
         }
 
+        // Get the next token
         token = strtok(NULL, TOKEN_DELIMS);
     }
 

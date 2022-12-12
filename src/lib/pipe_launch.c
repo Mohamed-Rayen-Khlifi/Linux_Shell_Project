@@ -4,6 +4,8 @@
 #include "../headers/launch.h"
 
 
+// Executes two processes that are connected using "|"
+
 int pipe_launch(char **arg1, char **arg2)
 {
     int fd[2], pid;
