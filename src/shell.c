@@ -77,46 +77,54 @@ int main(int argc, char *argv[])
             printf(RED"Press CTRL + D to confirm that you want to exit the shell");
         // write(STDOUT_FILENO, "Quit? ", strlen("Quit?"));
 
-        // printf("%s%% ",argv[0]);
+       // printf("%s%% ",argv[0]);
         if (batchMode == 1)
+        // Reads text lines from the file fp and stores it in the buffer
             fgets(buffer, 1000, fp);
         else
+        // Reads from stdin if batch mode is disabled
             fgets(buffer, 1000, stdin);
 
         int j;
 
         strtok(buffer, "\n\r");
 
-        if (batchMode == 1 && strcmp(buffer, "xyz") != 0)
+        if (batchMode == 1 ) //&&  strcmp(buffer, "xyz") != 0 )
         {
-            // printf("Command %d: \"%s\"\n",j,subcmds[j]);
+            //printf("Buffer is: %s\n", buffer);
+
+            //printf("Buffer is: %s\n", buffer);
+            //printf("Command %d: \"%s\"\n",j,subcmds[j]);
+            // Writes strlen(buffer) bits from the buffer to the stdout_fileno
             write(STDOUT_FILENO, buffer, strlen(buffer));
             write(STDOUT_FILENO, "\n", strlen("\n"));
             // if(j!=num_subcmds-1) write(STDOUT_FILENO, " ", strlen(" "));
-            if (strcmp(buffer, "+") == 0)
-            {
+           // if (strcmp(buffer, "+") == 0)
+           // {
                 // printf("%s",buffer);
-                exit(0);
-            }
+             //   exit(0);
+          //  }
         }
 
-        if (strcmp(buffer, "xyz") == 0)
-            exit(0);
+       // if (strcmp(buffer, "xyz") == 0)
+         //  exit(0);
 
-        // printf("Buffer is: %s\n", buffer);
 
-        for (i = 0; buffer[i] != '\0'; i++)
+      /*  for (i = 0; buffer[i] != '\0'; i++)
         {
             if (buffer[i] == '+')
                 flag++;
-        }
+        } */
 
+
+        // Empty file 
         if (strlen(buffer) == 0)
         {
-            char error_message[30] = "An error has occurred\n";
+            char error_message[80] = "Empty file. Please specify a valid file for the batch executor\n";
             write(STDERR_FILENO, error_message, strlen(error_message));
         }
 
+/*
         j = i - 2;
         int endingWithPlus = 0;
         for (; j >= 0; j--)
@@ -131,21 +139,29 @@ int main(int argc, char *argv[])
             else
                 break;
         }
-
+*/ 
         // printf("%d\n", flag);
-        tmp = strtok(buffer, "+");
+        tmp = strtok(buffer, ";");
+       //printf("tokens are: %s", tmp);
 
         while (tmp)
         {
+            // If the command is quit, dont execute the preceeding commands and close the file
+            if (!strcmp(tmp,"quit")){ exit(0); }
             cmds[num_cmds] = tmp;
             num_cmds++;
-            tmp = strtok(NULL, "+");
+          // printf(RED"tmp is %s\n", tmp);
+            tmp = strtok(NULL, ";");
+          //  printf("%s", tmp);
         }
 
         int numCmndsToFork = num_cmds;
 
-        if (flag == 0)
+        // No + used in the buffer
+       /*if (flag == 0)
         {
+            printf("rc is: %d\n", rc);
+
             if ((rc = breakString(buffer)) == 101)
             {
                 // printf("exiting3...");
@@ -153,6 +169,7 @@ int main(int argc, char *argv[])
                 exit(0);
             }
         }
+
         else
         {
 
@@ -165,7 +182,7 @@ int main(int argc, char *argv[])
                     break;
                     exit(0);
                 }
-            }
+            }*/
 
             int i, status;
             for (i = numCmndsToFork - 1; i >= 0; i--)
@@ -211,10 +228,10 @@ int main(int argc, char *argv[])
                     exit(0);
                 }
             }
-        }
-        strcpy(buffer, "xyz");
-    }
+        //}
+}
     return 0;
-
     return EXIT_SUCCESS;
 }
+
+

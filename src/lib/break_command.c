@@ -29,7 +29,7 @@ int breakCommand(char *str)
 
      for (j = 0; j < num_subcmds; j++) 
 	 {
-    	     printf("Executing:\"%s\"\n",subcmds[j]);
+    	printf("Executing:\"%s\"\n",subcmds[j]);
 
 	 }
        subcmds[j] = NULL;
@@ -108,7 +108,7 @@ int breakCommand(char *str)
 	   out = open(subcmds[savedJ+1], O_RDWR | O_CREAT , 0666 ); 
 	   if(out < 0)
 	     {
-	       char error_message[30] = "An error has occurred\n";
+	       char error_message[30] = "An error has \n";
 	       write(STDERR_FILENO, error_message, strlen(error_message));
 	       exit(0);
 	     }

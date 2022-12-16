@@ -66,6 +66,13 @@ void main_loop(void)
                 exit(0);
                 free(prompt);
             }
+
+             // Quiting the shell 
+            else if (line[0] == 'e' && line[1] == 'x' && line[2] == 'i' && line[3] == 't')
+            {
+                exit(0);
+                free(prompt);
+            }
        
             else
             {

@@ -18,8 +18,6 @@ Interatcive:
 
 
 
-
-
 Understand:
         snprintf(l31 main_loop.c)
         process launch macros(l21 shell.c)

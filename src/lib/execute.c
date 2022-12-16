@@ -82,9 +82,14 @@ int execute(char **args)
 
         }
 
-        // for piping
+        
         else if (!strcmp("|", args[j]))
         {
+            // OR operator
+            if (!strcasecmp("|",args[j+1])){
+               //// 
+            }
+        // Piping
             char **arg2;
             int i = 0;
             args[j] = NULL;
@@ -93,7 +98,28 @@ int execute(char **args)
             return pipe_launch(args, arg2);
         }
 
-               j++;
+        // AND operator
+        else if (!strcmp("&", args[j])){
+            if (!strcmp("&", args[j+1])){   
+               // int result1= launch(args, 1, shell_FG | shell_STDOUT);
+                //if (result1 != 1){
+                    // Error
+
+//                }
+                //return and_launch(args, &args[j+2]);
+                // launch(&args[j+2], 1, shell_FG | shell_STDOUT);
+            }
+        }
+
+
+        // AND operator
+        else if (!strcmp(";", args[j])){
+
+            //return launch(args, 1, shell_FG | shell_STDOUT);
+        }
+        
+        
+        j++;
  
 
 

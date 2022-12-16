@@ -1,0 +1,33 @@
+batch_tests
+bin
+dev
+Makefile
+README.md
+src
+test
+todo.md
+022 bin -> usr/bin
+drwxr-xr-x   4 root    root    4.0K Dec  3 10:13 boot
+drwxrwxr-x   2 root    root    4.0K Jun 12  2022 cdrom
+drwxr-xr-x  21 root    root    4.7K Dec 16 16:09 dev
+drwxr-xr-x 144 root    root     12K Dec 15 18:36 etc
+drwxr-xr-x   3 root    root    4.0K Dec 10 08:55 home
+lrwxrwxrwx   1 root    root       7 Jun 12  2022 lib -> usr/lib
+lrwxrwxrwx   1 root    root       9 Jun 12  2022 lib32 -> usr/lib32
+lrwxrwxrwx   1 root    root       9 Jun 12  2022 lib64 -> usr/lib64
+lrwxrwxrwx   1 root    root      10 Jun 12  2022 libx32 -> usr/libx32
+drwx------   2 root    root     16K Jun 12  2022 lost+found
+drwxr-xr-x   3 root    root    4.0K Jun 13  2022 media
+drwxr-xr-x   2 root    root    4.0K Feb 23  2022 mnt
+drwxr-xr-x   3 rkhlifi rkhlifi 4.0K Dec 14 09:46 opt
+dr-xr-xr-x 358 root    root       0 Dec 16 16:08 proc
+drwx------   9 root    root    4.0K Dec  8 21:45 root
+drwxr-xr-x  35 root    root     980 Dec 16 16:37 run
+lrwxrwxrwx   1 root    root       8 Jun 12  2022 sbin -> usr/sbin
+drwxr-xr-x   9 root    root    4.0K Jun 13  2022 snap
+drwxr-xr-x   2 root    root    4.0K Feb 23  2022 srv
+-rw-------   1 root    root    2.0G Jun 12  2022 swapfile
+dr-xr-xr-x  13 root    root       0 Dec 16 16:08 sys
+drwxrwxrwt  26 root    root    4.0K Dec 16 18:32 tmp
+drwxr-xr-x  14 root    root    4.0K Feb 23  2022 usr
+drwxr-xr-x  15 root    root    4.0K Sep  8 21:27 var
