@@ -1,6 +1,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <fcntl.h>
+//#include <stdlib.h>
 #include "../headers/pipe_launch.h"
 #include "../headers/constants.h"
 #include "../headers/launch.h"
@@ -65,46 +67,21 @@ int execute(char **args)
     }
 
     int j = 0;
-
     // Redirection
     while (args[j] != NULL)
     {
         // for `>` operator for redirection (stdout)
         if (!strcmp(">", args[j]))
         {
-            // File descriptor used for redirection
-            int fd = fileno(fopen(args[j + 1], "w+"));
-            args[j] = NULL;
-            return launch(args, fd, shell_FG);
-        }
-        // for `>>` operator for redirection (stdout with append)
-        else if (!strcmp(">>", args[j]))
-        {
-            int fd = fileno(fopen(args[j + 1], "a+"));
+            //File descriptor used for redirection
+            int fd = open(args[j+1],O_WRONLY | O_CREAT | O_TRUNC, 0777);
+            dup2(fd, STDOUT_FILENO);
+            close(fd);
             args[j] = NULL;
             return launch(args, fd, shell_FG | shell_STDOUT);
+
         }
-        // for `2>` operator for redirection (stderr)
-        else if (!strcmp("2>", args[j]))
-        {
-            int fd = fileno(fopen(args[j + 1], "w+"));
-            args[j] = NULL;
-            return launch(args, fd, shell_FG | shell_STDERR);
-        }
-        // for `>&` operator for redirection (stdout and stderr)
-        else if (!strcmp(">&", args[j]))
-        {
-            int fd = fileno(fopen(args[j + 1], "w+"));
-            args[j] = NULL;
-            return launch(args, fd, shell_FG | shell_STDERR | shell_STDOUT);
-        }
-        // for `<` operator for redirection (stdin)
-        else if (!strcmp("<", args[j]))
-        {
-            int fd = fileno(fopen(args[j + 1], "r"));
-            args[j] = NULL;
-            return launch(args, fd, shell_FG | shell_STDIN);
-        }
+
         // for piping
         else if (!strcmp("|", args[j]))
         {
@@ -115,8 +92,17 @@ int execute(char **args)
 
             return pipe_launch(args, arg2);
         }
-        j++;
-    }
 
+               j++;
+ 
+
+
+    }
+      
     return launch(args, STDOUT_FILENO, shell_FG);
 }
+
+
+
+
+

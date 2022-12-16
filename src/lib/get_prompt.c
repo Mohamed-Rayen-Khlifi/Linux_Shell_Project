@@ -23,10 +23,10 @@ char *get_prompt(void)
     if( getcwd( tempbuf, sizeof(tempbuf) ) != NULL ) {
 
         snprintf(prompt, prompt_len, "%s %% ", tempbuf);
-        strcpy(prompt, BLUE"");
+        strcpy(prompt, YELLOW"");
         strcat(prompt, user);
         strcat(prompt, WHITE"@");
-        strcat(prompt, BLUE"");
+        strcat(prompt, YELLOW"");
         strcat(prompt, host);
         strcat(prompt, YELLOW" ");
         strcat(prompt, tempbuf);
@@ -35,6 +35,7 @@ char *get_prompt(void)
         strcat(prompt, " ");
         return prompt;
     }
+
     else {
         free(prompt);
         return NULL;

@@ -1,13 +1,22 @@
 
-Refactoring:
-        -main_loop
+Edit the home directory to appear as ~ in the prompt
+Fix quit bug: quit with arguments still quits the shell
+Stderr redirection bug 
 
-; && and || for interactive mode
-&& and || for batch mode
-pipe doesnt work in batch
-redirection (>, >>, 2>1) in interactive
-redirection (>>, 2>1) in batch
-history doesnt work for batch mode
+
+
+Batch:
+&& 
+||
+Pipe
+history
+
+Interatcive:
+;
+&&
+||
+
+
 
 
 

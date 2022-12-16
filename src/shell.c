@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
     FILE *new;
     FILE *fp;
 
+    // Batch mode is active
     if (batchMode == 1)
     {
         fp = fopen(fileToRead, "r");
@@ -73,7 +74,7 @@ int main(int argc, char *argv[])
     {
         num_cmds = 0;
         if (batchMode == 0)
-            printf("Batch mode is 0");
+            printf(RED"Press CTRL + D to confirm that you want to exit the shell");
         // write(STDOUT_FILENO, "Quit? ", strlen("Quit?"));
 
         // printf("%s%% ",argv[0]);

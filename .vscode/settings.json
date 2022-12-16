@@ -3,7 +3,8 @@
         "constants.h": "c",
         "typeinfo": "c",
         "unistd.h": "c",
-        "limits": "c"
+        "limits": "c",
+        "cstdio": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -20,7 +20,10 @@ int breakCommand(char *str)
           subcmds[num_subcmds] = tmp;
           num_subcmds++;
           tmp = strtok(NULL," \n\t");
+
+	
        } 
+	   
             
        int j, loc=0;
 

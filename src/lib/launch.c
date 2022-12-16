@@ -1,6 +1,7 @@
 #include<wait.h>
 #include<signal.h>
 #include<stdlib.h>
+#include<fcntl.h>
 #include<unistd.h>
 #include<string.h>
 #include<stdio.h>
@@ -60,6 +61,7 @@ int launch(char **args, int fd, int options)
         {
             fprintf(stderr, RED "Unable to execute command '%s': %s\n" RESET, args[0],strerror(errno));
         }        exit(EXIT_FAILURE);
+
     }
 
     else if (pid < 0)
@@ -86,7 +88,9 @@ int launch(char **args, int fd, int options)
         // Didnt receive an exist or a signal
     }
 
-
+    dup2(STDOUT_FILENO, 1);
+    dup2(STDIN_FILENO, 1);
+    dup2(STDERR_FILENO, 1);
     return 1;
 }
 

@@ -28,15 +28,17 @@ int breakString(char *str)
            
        for (j = 0; j < num_subcmds; j++) 
        {
-	 int ret;
+	        int ret;
 		    if((subcmds[j][0]=='c' && subcmds[j][1]=='d') == 1)
 	   {
 	     breakCommand(subcmds[j]);
 	   }
+
 	 else if(strcmp(subcmds[j],"exit") == 0)
 	   {
 	     breakCommand(subcmds[j]);
 	   }
+	   
 	 else
 	   {
 	     if( (ret=fork()) > 0 )
