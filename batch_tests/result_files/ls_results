@@ -4,8 +4,8 @@ dev
 Makefile
 README.md
 src
-test
 todo.md
+o.md
 022 bin -> usr/bin
 drwxr-xr-x   4 root    root    4.0K Dec  3 10:13 boot
 drwxrwxr-x   2 root    root    4.0K Jun 12  2022 cdrom

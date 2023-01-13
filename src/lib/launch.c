@@ -57,7 +57,7 @@ int launch(char **args, int fd, int options)
             close(fd);
         }
 */
-        if (execvp(args[0], args) == -1)
+       if (execvp(args[0], args) == -1)
         {
             fprintf(stderr, RED "Unable to execute command '%s': %s\n" RESET, args[0],strerror(errno));
         }        exit(EXIT_FAILURE);

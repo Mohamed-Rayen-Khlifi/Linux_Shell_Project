@@ -21,7 +21,7 @@ char *get_prompt(void)
     prompt = malloc(prompt_len);
 
     if( getcwd( tempbuf, sizeof(tempbuf) ) != NULL ) {
-
+        
         snprintf(prompt, prompt_len, "%s %% ", tempbuf);
         strcpy(prompt, YELLOW"");
         strcat(prompt, user);

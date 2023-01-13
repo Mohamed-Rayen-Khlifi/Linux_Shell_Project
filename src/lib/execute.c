@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
-//#include <stdlib.h>
+#include <stdlib.h>
 #include "../headers/pipe_launch.h"
 #include "../headers/constants.h"
 #include "../headers/launch.h"
@@ -66,6 +66,7 @@ int execute(char **args)
         }
     }
 
+
     int j = 0;
     // Redirection
     while (args[j] != NULL)
@@ -86,41 +87,58 @@ int execute(char **args)
         else if (!strcmp("|", args[j]))
         {
             // OR operator
-            if (!strcasecmp("|",args[j+1])){
-               //// 
-            }
+            //if (!strcmp("|", args[j+1])){
+            //    char **args1;
+            //    for (int t=0; t<j; t++){
+            //        strcpy(args1[t], args[t]); 
+            //    }
+            //    printf("TEST");
+               //// for
+            //int firstcmd_result = launch(args1, 1, shell_FG | shell_STDOUT);
+            //if (firstcmd_result){
+                //printf("entered if");
+              //  return launch(args1, 1, shell_FG || shell_STDOUT);
+                //break;
+            //}
+           // else {
+             //   return launch(&args[j+2], 1, shell_FG || shell_STDOUT);
+            //}
+    //        }
         // Piping
             char **arg2;
             int i = 0;
             args[j] = NULL;
             arg2 = &args[j + 1];
-
             return pipe_launch(args, arg2);
         }
 
         // AND operator
         else if (!strcmp("&", args[j])){
+            printf("and");
             if (!strcmp("&", args[j+1])){   
-               // int result1= launch(args, 1, shell_FG | shell_STDOUT);
+                //int result1= launch(args, 1, shell_FG | shell_STDOUT);
                 //if (result1 != 1){
-                    // Error
-
-//                }
+                 // Error
+                //}
                 //return and_launch(args, &args[j+2]);
-                // launch(&args[j+2], 1, shell_FG | shell_STDOUT);
+                //launch(&args[j+2], 1, shell_FG | shell_STDOUT);
             }
         }
 
-
         // AND operator
         else if (!strcmp(";", args[j])){
-
-            //return launch(args, 1, shell_FG | shell_STDOUT);
+            //printf("entered ");
+            //char **first_args = calloc(8000, sizeof(char*));
+            //char **first_args;
+            //for (int t=0; t<j; t++){
+               //first_args[t] = malloc(1000*sizeof(char*));
+              // strcpy(first_args[t],args[t]);
+            //}
+            //printf("entered 2");
+            //return launch(first_args, 1, shell_FG | shell_STDOUT);
         }
         
-        
         j++;
- 
 
 
     }
