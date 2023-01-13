@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
         fp = fopen(fileToRead, "r");
         if (fp == NULL)
         {
-            char error_message[100] = RED "File does not exist.\n";
+            char error_message[100] = RED "File does not exist.\n" WHITE;
             write(STDERR_FILENO, error_message, strlen(error_message));
             exit(1);
         }

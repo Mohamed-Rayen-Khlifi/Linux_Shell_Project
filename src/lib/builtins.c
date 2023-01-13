@@ -20,7 +20,7 @@ int shell_cd(char **args)
     {
         if (chdir(args[1]) != 0)
         {
-            fprintf(stderr, RED "shell: %s\n" RESET, strerror(errno));
+            fprintf(stderr, RED "cd command error: %s\n" RESET, strerror(errno));
         }
     }
 
