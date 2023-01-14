@@ -30,7 +30,7 @@ int breakString(char *str)
        {
 
 			int ret;
-			if( (ret=fork()) > 0 ){ //PID given already exists
+			if( (ret=fork()) > 0 ){ //PID given already exists; wait for child to die
 					waitpid(ret,&status,WUNTRACED);
 					int x = WEXITSTATUS(status);
 					if(x==101)

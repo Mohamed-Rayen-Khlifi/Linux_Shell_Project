@@ -14,7 +14,7 @@ char *get_prompt(void)
     char *prompt, tempbuf[PATH_MAX];
 
     char *user = getenv("USERNAME");
-    char *host = getenv("DESKTOP_SESSION");
+    char *host = getenv("DESKTOP_SESSION"); 
     
     size_t prompt_len = strlen(user) + strlen(host) + strlen(tempbuf)+ 1500; 
 
