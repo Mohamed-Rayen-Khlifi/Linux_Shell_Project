@@ -57,14 +57,14 @@ int breakCommand(char *str)
 	 }
        
        
-       if(redirection_bool==1)
+    if(redirection_bool==1)
 	 {
 	   close(STDOUT_FILENO);
 	   out = open(subcmds[loc+1], O_RDWR | O_CREAT , 0666 ); 
 	   dup2(out, STDOUT_FILENO);
 	   execvp(subnew[0], subnew);
 	   close(out);
-	   return 1; //101
+	   return 101; //101
 	 }
 
     else if(strcmp(subcmds[0], "quit") == 0)
@@ -72,7 +72,7 @@ int breakCommand(char *str)
 	   exit(0);
 	 }
 
-       else if (execvp(subcmds[0], subcmds) < 0)
+    else if (execvp(subcmds[0], subcmds) < 0)
 	 {
 	   char error_message[30] = "Command doesn't exist \n";
 	   write(STDERR_FILENO, error_message, strlen(error_message));

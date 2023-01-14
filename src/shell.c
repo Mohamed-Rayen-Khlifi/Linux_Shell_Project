@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
         // Empty file 
         if (strlen(buffer) == 0)
         {
-            char error_message[80] = "Empty file. Please specify a valid file for the batch executor\n";
+            char error_message[80] = RED"Empty file. Please specify a valid file for the batch executor\n";
             write(STDERR_FILENO, error_message, strlen(error_message));
         }
 

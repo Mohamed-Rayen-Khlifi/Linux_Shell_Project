@@ -1,5 +1,4 @@
 pwd
-exit
 whoami
 uptime
 ls /
