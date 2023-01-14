@@ -14,7 +14,6 @@
 void main_loop(void)
 {
     // Signal to close the shell
-    signal(SIGINT, shell_exit_on_SIGINT);
     char *line;
     char **args;
 
