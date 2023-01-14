@@ -66,13 +66,6 @@ void main_loop(void)
                 free(prompt);
             }
 
-             // Quiting the shell 
-            else if (line[0] == 'e' && line[1] == 'x' && line[2] == 'i' && line[3] == 't')
-            {
-                exit(0);
-                free(prompt);
-            }
-       
             else
             {
                 args = split_line(line);

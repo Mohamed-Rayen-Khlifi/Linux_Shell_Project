@@ -22,6 +22,7 @@ int pipe_launch(char **arg1, char **arg2)
         launch(arg1, STDOUT_FILENO, shell_FG);
         exit(EXIT_FAILURE);
     }
+
     else if (pid > 0)
     {
         close(STDIN_FILENO);
@@ -32,3 +33,5 @@ int pipe_launch(char **arg1, char **arg2)
         return 1;
     }
 }
+
+
