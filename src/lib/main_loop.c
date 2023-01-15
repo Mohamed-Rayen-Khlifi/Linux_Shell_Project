@@ -60,7 +60,7 @@ void main_loop(void)
             write_history(history_path);
 
             // Quiting the shell
-            if (line[0] == 'q' && line[1] == 'u' && line[2] == 'i' && line[3] == 't')
+            if (strcmp(line,"quit")==0)
             {
                 exit(0);
                 free(prompt);
@@ -76,6 +76,7 @@ void main_loop(void)
                 status = execute(args);
                 free(args);
             }
+            
             else
             {
                 status = 1;

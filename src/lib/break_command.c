@@ -44,7 +44,6 @@ int breakCommand(char *str)
 					}
 					}
 
-
 				if(redirection_bool==1)
 					{
 					for (j = 0; j < loc; j++) 

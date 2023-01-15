@@ -4,7 +4,8 @@
         "typeinfo": "c",
         "unistd.h": "c",
         "limits": "c",
-        "cstdio": "c"
+        "cstdio": "c",
+        "main_loop.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
