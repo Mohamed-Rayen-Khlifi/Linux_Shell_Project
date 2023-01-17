@@ -7,7 +7,7 @@ void fileIO(char * args[], char* inputFile, char* outputFile, int option){
 	
 	int fileDescriptor; // between 0 and 19, describing the output or input file
 	
-	if((pid=fork())==-1){
+	if((pid=())==-1){
 		printf("Child process could not be created\n");
 		return;
 	}

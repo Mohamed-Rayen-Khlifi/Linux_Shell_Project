@@ -8,99 +8,72 @@
 #include "../headers/launch.h"
 #include "../headers/builtins.h"
 
-// Component responsible for treating special cases and launching processes using the launch component
-
-
-/* Function pointers that correspond to the buitins */
 int (*builtin_func[])(char **) = {
     &shell_cd,
     &shell_help,
     &shell_history,
 };
 
-
-/* list of builtins in the shell */
 char *builtins[] = {
     "cd",
     "help",
     "history",
-    "quit"};
+    "quit"
+};
 
-/* Returns the number of builtin commands available for shell */
-int num_builtins()
-{
+int num_builtins() {
     return sizeof(builtins) / sizeof(char *);
 }
 
-/* Function responsible for parsing the arguments */
-int execute(char **args)
-{
-    int i;
+int execute(char **args) {
+    
+    int i=0;
+    int j=0;
 
-    if (args[0] == NULL)
-    {
+    if (args[0] == NULL) {
         return 1;
     }
 
-    i = 0;
-    while (args[i])
-    {
+    while (args[i]) {
         i++;
     }
 
-    /* launch process in background */
-    if (!strcmp("&", args[--i]))
-    {
+    if (!strcmp("&", args[--i])) {
         args[i] = NULL;
         return launch(args, STDOUT_FILENO, shell_BG);
     }
 
-    // Checking builtin commands
-
-    for (i = 0; i < num_builtins(); i++)
-    {
-        // strcmp("a","a") == 0
-        if (!strcmp(args[0], builtins[i]))
-        {
+    for (i = 0; i < num_builtins(); i++) {
+        if (!strcmp(args[0], builtins[i])) {
             return (*builtin_func[i])(args);
         }
     }
 
+    while (args[j] != NULL) {
 
-    int j = 0;
-    // Redirection
-    while (args[j] != NULL)
-    {
-        // for `>` operator for redirection (stdout)
-        if (!strcmp(">", args[j]))
-        {
-            //File descriptor used for redirection
+        if (!strcmp(">", args[j])) {
             int fd = open(args[j+1],O_WRONLY | O_CREAT | O_TRUNC, 0777);
             dup2(fd, STDOUT_FILENO);
             close(fd);
             args[j] = NULL;
             return launch(args, fd, shell_FG | shell_STDOUT);
-
         }
 
-        
-        else if (!strcmp("|", args[j]))
-        {
-            if (!strcmp("|", args[j+1])){
-               char **args1;
-               for (int t=0; t<j; t++){
-                   strcpy(args1[t], args[t]); 
-               }
-                int firstcmd_result = launch(args1, 1, shell_FG | shell_STDOUT);
-                if (firstcmd_result){ // First command success}    
-                    return launch(args1, 1, shell_FG || shell_STDOUT);
-                    break;
-                }
-                else { // First command failed
-                    return launch(&args[j+2], 1, shell_FG || shell_STDOUT);
-                }
-           }
-        // Piping
+        else if (!strcmp("|", args[j])) {
+            
+            // if (!strcmp("|", args[j+1])) {       
+            //    char **args1, **args2;
+            //    strncpy(args1, args[0], j-1);
+            //    int firstcmd_result = launch(args1, 1, shell_FG | shell_STDOUT);
+            //     if (firstcmd_result) {    
+            //         return launch(args1, 1, shell_FG || shell_STDOUT);
+            //        // break;
+            //     }
+            //     else { 
+            //         strncpy(args2, args[j], strnlen(&args));
+            //         return launch(&args[j+2], 1, shell_FG || shell_STDOUT);
+            //      }
+            
             char **arg2;
             int i = 0;
             args[j] = NULL;
@@ -108,8 +81,6 @@ int execute(char **args)
             return pipe_launch(args, arg2);
         }
 
-
-        // AND operator
         else if (!strcmp("&", args[j])){
             if (!strcmp("&", args[j+1])){   
                 // int result1= launch(args, 1, shell_FG | shell_STDOUT);
@@ -120,7 +91,6 @@ int execute(char **args)
             }
         }
 
-        // Semicolomn
         else if (!strcmp(";", args[j])){
             // char **first_args = calloc(8000, sizeof(char*));
             // char **first_args;
@@ -131,11 +101,8 @@ int execute(char **args)
             // return launch(first_args, 1, shell_FG | shell_STDOUT);
             // for (int t=j+1; ;t++)
         }
-        
         j++;
-
     }
-      
     return launch(args, STDOUT_FILENO, shell_FG);
 }
 

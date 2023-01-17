@@ -8,20 +8,16 @@
 #include <errno.h>
 #include "../headers/constants.h"
 
-/* Function that returns the prompt */
 char *get_prompt(void)
 {
     char *prompt, tempbuf[PATH_MAX];
-
     char *user = getenv("USERNAME");
     char *host = getenv("DESKTOP_SESSION"); 
-    
-    size_t prompt_len = strlen(user) + strlen(host) + strlen(tempbuf)+ 1500; 
+    size_t prompt_len = strlen(user) + strlen(host) + strlen(tempbuf)+ 2500; 
 
     prompt = malloc(prompt_len);
 
     if( getcwd( tempbuf, sizeof(tempbuf) ) != NULL ) {
-        
         snprintf(prompt, prompt_len, "%s %% ", tempbuf);
         strcpy(prompt, YELLOW"");
         strcat(prompt, user);

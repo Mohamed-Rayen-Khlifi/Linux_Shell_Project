@@ -15,31 +15,25 @@ int breakString(char *str)
        char buffer[1000];
        strcpy(buffer, str);
        tmp = strtok(buffer,";");
-       int num_subcmds = 0;
+       int j, status, num_subcmds = 0;
         
-       while (tmp) 
-       {
+       while (tmp) {
           subcmds[num_subcmds] = tmp;
           num_subcmds++;
           tmp = strtok(NULL,";");
        } 
 
-       int j, status;
-           
-       for (j = 0; j < num_subcmds; j++) 
-       {
-
+       for (j = 0; j < num_subcmds; j++) {
 			int ret;
-			if( (ret=fork()) > 0 ){ //PID given already exists; wait for child to die
+			if( (ret=fork()) > 0 ) { 
 					waitpid(ret,&status,WUNTRACED);
 					int x = WEXITSTATUS(status);
 					if(x==101)
 					return 101;
 			}
 
-	    	else if (ret == 0){ // success forking
-					if(breakCommand(subcmds[j])==1)  
-					{ 
+	    	else if (ret == 0) { 
+					if(breakCommand(subcmds[j])==1) { 
 						exit(1);
 						return 101; 
 					}
@@ -53,4 +47,4 @@ int breakString(char *str)
 				exit(101);
 	       }
 	   }
-       }
+}

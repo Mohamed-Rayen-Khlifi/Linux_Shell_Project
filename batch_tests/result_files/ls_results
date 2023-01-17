@@ -1,1 +1,8 @@
-lrwxrwxrwx 1 root root 7 Jun 12  2022 /bin -> usr/bin
+batch_tests
+bin
+f1
+Makefile
+README.md
+src
+test.sh
+todo.md

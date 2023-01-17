@@ -12,7 +12,7 @@ int and_launch(char **first_arg, char **second_arg)
     printf("works");
     return 1;
 
-    if ((pid = fork()) == 0)
+    if ((pid = ()) == 0)
     {
         launch(arg2, STDOUT_FILENO, shell_FG)
     }
