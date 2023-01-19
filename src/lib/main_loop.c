@@ -11,7 +11,8 @@
 #include "../headers/constants.h"
 #include "../headers/builtins.h"
 
-void main_loop(void) {
+void main_loop(void)
+{
     char *line, *prompt, *homedir = getenv("HOME");
     char **args;
     int status, index;
@@ -22,8 +23,10 @@ void main_loop(void) {
 
     read_history(history_path);
 
-    do{
-        if ((prompt = get_prompt()) == NULL) {
+    do
+    {
+        if ((prompt = get_prompt()) == NULL)
+        {
             status = 0;
             fprintf(stderr, RED "shell: Failed to get prompt.\n" RESET);
         }
@@ -31,35 +34,41 @@ void main_loop(void) {
         line = readline(prompt);
         add_history(line);
 
-        if (!line) {
+        if (!line)
+        {
             status = 0;
         }
 
-        else {
+        else
+        {
             write_history(history_path);
 
-            if (strcmp(line,"quit")==0) {
+            if (strcmp(line, "quit") == 0)
+            {
                 exit(0);
                 free(prompt);
             }
 
-            else {
+            else
+            {
                 args = split_line(line);
             }
 
-            if (args) {
+            if (args)
+            {
                 status = execute(args);
                 free(args);
             }
-            
-            else {
+
+            else
+            {
                 status = 1;
             }
         }
 
         free(prompt);
         free(line);
-        
+
     } while (status);
 
     free(history_path);

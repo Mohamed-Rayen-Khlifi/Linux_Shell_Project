@@ -1,1 +1,0 @@
-ls;pwd;echo hello

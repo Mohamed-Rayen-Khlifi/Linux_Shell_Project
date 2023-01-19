@@ -1,11 +1,11 @@
-#include<wait.h>
-#include<signal.h>
-#include<stdlib.h>
-#include<fcntl.h>
-#include<unistd.h>
-#include<string.h>
-#include<stdio.h>
-#include<errno.h>
+#include <wait.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdio.h>
+#include <errno.h>
 #include "../headers/constants.h"
 
 int launch(char **args, int fd, int options)
@@ -18,24 +18,31 @@ int launch(char **args, int fd, int options)
     pid_t pid, wpid;
     int status;
 
-    if ((pid = fork()) == 0) {
-       if (execvp(args[0], args) == -1) {
-            fprintf(stderr, RED "Unable to execute command '%s': %s\n" RESET, args[0],strerror(errno));
-        }        exit(EXIT_FAILURE);
-
+    if ((pid = fork()) == 0)
+    {
+        if (execvp(args[0], args) == -1)
+        {
+            fprintf(stderr, RED "Unable to execute command '%s': %s\n" RESET, args[0], strerror(errno));
+        }
+        exit(EXIT_FAILURE);
     }
 
-    else if (pid < 0) {
+    else if (pid < 0)
+    {
         fprintf(stderr, RED "Error: Child processes' forking has failed  %s\n" RESET, strerror(errno));
     }
 
-    else {
+    else
+    {
         signal(SIGINT, SIG_IGN);
-        do {
-            if (!shell_bg) {
+        do
+        {
+            if (!shell_bg)
+            {
                 wpid = waitpid(pid, &status, WUNTRACED);
             }
-            else {
+            else
+            {
                 printf(YELLOW "This process is now launched in the background [pid: %d] - %s\n" RESET, pid, args[0]);
             }
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
@@ -46,4 +53,3 @@ int launch(char **args, int fd, int options)
     dup2(STDERR_FILENO, 1);
     return 1;
 }
-

@@ -29,27 +29,32 @@ int main(int argc, char *argv[])
     char *tmp;
     int num_cmds, i, flag, rc = 0;
 
-    if (argc > 2) {
+    if (argc > 2)
+    {
         char error_message[150] = RED "Please specify one file. \n";
         write(STDERR_FILENO, error_message, strlen(error_message));
         exit(1);
     }
-    
-    else if (argc == 2) {
+
+    else if (argc == 2)
+    {
         batchMode = 1;
         fileToRead = argv[1];
     }
 
-    else {
+    else
+    {
         welcomeScreen();
         main_loop();
     }
 
     FILE *new, *fp;
 
-    if (batchMode == 1){
+    if (batchMode == 1)
+    {
         fp = fopen(fileToRead, "r");
-        if (fp == NULL) {
+        if (fp == NULL)
+        {
             char error_message[100] = RED "File does not exist.\n" WHITE;
             write(STDERR_FILENO, error_message, strlen(error_message));
             exit(1);
@@ -57,39 +62,48 @@ int main(int argc, char *argv[])
         new = fp;
     }
 
-    else{
+    else
+    {
         new = stdin;
     }
 
-    while (!feof(new)){
+    while (!feof(new))
+    {
         num_cmds = 0;
-        if (batchMode == 1) {
+        if (batchMode == 1)
+        {
             fgets(buffer, 1000, fp);
         }
-        else {
+        else
+        {
             fgets(buffer, 1000, stdin);
         }
 
         int j;
         strtok(buffer, "\n\r");
 
-        if (batchMode == 1 ) { 
-            if(!strcmp("quit", buffer)) {
-            write(STDOUT_FILENO, buffer, strlen(buffer));
-            write(STDOUT_FILENO, "\n", strlen("\n"));
+        if (batchMode == 1)
+        {
+            if (!strcmp("quit", buffer))
+            {
+                write(STDOUT_FILENO, buffer, strlen(buffer));
+                write(STDOUT_FILENO, "\n", strlen("\n"));
             }
         }
 
-        if (strlen(buffer) == 0) {
-            char error_message[80] = RED"Empty file; Please specify a valid file for the batch executor. \n";
+        if (strlen(buffer) == 0)
+        {
+            char error_message[80] = RED "Empty file; Please specify a valid file for the batch executor. \n" WHITE;
             write(STDERR_FILENO, error_message, strlen(error_message));
-        } 
+        }
 
         tmp = strtok(buffer, ";");
 
-        while (tmp) {
-            if (!strcmp(tmp,"quit")) { 
-                exit(0); 
+        while (tmp)
+        {
+            if (!strcmp(tmp, "quit"))
+            {
+                exit(0);
             }
             cmds[num_cmds] = tmp;
             num_cmds++;
@@ -98,41 +112,50 @@ int main(int argc, char *argv[])
 
         int numCmndsToFork = num_cmds;
         int i, status;
-            for (i = 0; i < numCmndsToFork; i++) {
-                int ret;
+        for (i = 0; i < numCmndsToFork; i++)
+        {
+            int ret;
 
-                if ((ret = fork()) > 0) {
-                    while (1) {
-                        int status;
-                        pid_t done = waitpid(ret, &status, WUNTRACED);
-                        if (done == -1) {
-                            if (errno == ECHILD) {
-                                break; 
-                            }
+            if ((ret = fork()) > 0)
+            {
+                while (1)
+                {
+                    int status;
+                    pid_t done = waitpid(ret, &status, WUNTRACED);
+                    if (done == -1)
+                    {
+                        if (errno == ECHILD)
+                        {
+                            break;
                         }
-                        else {
-                            int x = WEXITSTATUS(status);
-                            if (!WIFEXITED(x) || WEXITSTATUS(x) != 101){
-                                exit(0);
-                            }
+                    }
+                    else
+                    {
+                        int x = WEXITSTATUS(status);
+                        if (!WIFEXITED(x) || WEXITSTATUS(x) != 101)
+                        {
+                            exit(0);
                         }
                     }
                 }
+            }
 
-                else if (ret == 0) {
-                    if (breakString(cmds[i]) == 101){
-                        exit(0);
-                    }
-                }
-
-                else {
-                    char error_message[80] = RED"Error: Could not fork a child process.\n";
-                    write(STDERR_FILENO, error_message, strlen(error_message));
+            else if (ret == 0)
+            {
+                if (breakString(cmds[i]) == 101)
+                {
                     exit(0);
                 }
-            }           
+            }
+
+            else
+            {
+                char error_message[80] = RED "Error: Could not fork a child process.\n";
+                write(STDERR_FILENO, error_message, strlen(error_message));
+                exit(0);
+            }
+        }
     }
     return 0;
     return EXIT_SUCCESS;
 }
-

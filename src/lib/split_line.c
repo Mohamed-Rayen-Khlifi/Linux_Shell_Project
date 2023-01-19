@@ -8,27 +8,32 @@
 #include <errno.h>
 #include "../headers/constants.h"
 
-char **split_line(char *line) {
+char **split_line(char *line)
+{
     char **tokens = malloc(sizeof(char *) * TOKEN_BUFSIZE);
     char *token;
     int bufsize_copy = TOKEN_BUFSIZE;
     int pos = 0;
 
-    if (!tokens) {
+    if (!tokens)
+    {
         fprintf(stderr, RED "Memory allocation failed." RESET);
         exit(EXIT_FAILURE);
     }
     token = strtok(line, TOKEN_DELIMS);
 
-    while (token != NULL) {
+    while (token != NULL)
+    {
         tokens[pos] = token;
         pos++;
 
-        if (pos >= bufsize_copy) {
+        if (pos >= bufsize_copy)
+        {
             bufsize_copy = bufsize_copy * 2;
             tokens = realloc(tokens, sizeof(char *) * bufsize_copy);
 
-            if (!tokens) {
+            if (!tokens)
+            {
                 fprintf(stderr, RED "Memory allocation failed." RESET);
                 exit(EXIT_FAILURE);
             }

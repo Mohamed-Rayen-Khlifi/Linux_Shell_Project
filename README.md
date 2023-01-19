@@ -20,10 +20,4 @@ $ ./bin/shell Batch_File_Path
 ```
 $ make clean
 ```
-## Features
-
-- Splits command based on whitespace
-- History
-- Recalling history through `!` & ~ `!-`
-- Piping (two processes only)
 

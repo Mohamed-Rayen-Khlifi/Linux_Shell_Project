@@ -1,16 +1,14 @@
-#define MAX_BUFSIZE 1024 /* Maximum size for the command buffer */
-#define PROMPT_MAXSIZE 1024 /* Maximum size of the prompt */
-#define TOKEN_BUFSIZE 64 /* Maximum size of each of the tokens in the command */
-#define TOKEN_DELIMS " \t\r\n\a" /* token delimeters */
+#define MAX_BUFSIZE 1024 
+#define PROMPT_MAXSIZE 1024 
+#define TOKEN_BUFSIZE 64 
+#define TOKEN_DELIMS " \t\r\n\a" 
 
 #define HISTFILE ".shell_history"
-extern char *history_path; /* Defining the shared pointer variable history_path*/
+extern char *history_path; 
 
-/* terminal styles */
 #define RESET "\e[0m"
 #define BOLD "\e[1m"
 
-/* terminal colors */
 #define YELLOW "\e[33m"
 #define RED "\e[31m"
 #define BLUE "\e[34m"
@@ -18,7 +16,6 @@ extern char *history_path; /* Defining the shared pointer variable history_path*
 #define GREEN "\e[32m"
 #define WHITE "\e[37m"
 
-/* process launch macros */
 #define shell_FG 0x01
 #define shell_BG 0x02
 #define shell_STDOUT 0x04
