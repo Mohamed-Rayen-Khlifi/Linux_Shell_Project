@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
     if (argc > 2)
     {
-        char error_message[150] = RED "Please specify one file. \n";
+        char error_message[150] = RED "Please specify one file. \n" WHITE;
         write(STDERR_FILENO, error_message, strlen(error_message));
         exit(1);
     }
